@@ -26,6 +26,7 @@ const numberArray = [number0, number1, number2, number3, number4, number5, numbe
 //variables
 let valueStrInMemory = null;
 let operatorInMemory = null;
+isDisplayClear = false;
 
 //functions
 const getValueAsStr = () => valueElement.textContent.split(',').join('');
@@ -93,7 +94,8 @@ const handleOperatorClick = (operation) => {
     }
     valueStrInMemory = getResultofOperationAsStr();
     operatorInMemory = operation;
-    setStrAsValue('0');
+    //setStrAsValue('0');
+    setStrAsValue(valueStrInMemory);
 };
 
 
