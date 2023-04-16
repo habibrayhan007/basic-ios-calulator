@@ -26,6 +26,7 @@ const numberArray = [number0, number1, number2, number3, number4, number5, numbe
 //variables
 let valueStrInMemory = null;
 let operatorInMemory = null;
+let result = null;
 isDisplayClear = false;
 
 //functions
@@ -59,6 +60,10 @@ const handleNumberClick = (numStr) => {
         setStrAsValue(numStr);
     }
     else {
+        if (result) {
+            valueElement.textContent = "0".join('');
+            setStrAsValue(currentValueStr + numStr);
+        }
         setStrAsValue(currentValueStr + numStr);
     }
 };
@@ -66,21 +71,22 @@ const handleNumberClick = (numStr) => {
 const getResultofOperationAsStr = () => {
     const currentValueNum = getValueAsNum();
     const valueNumInMemory = parseFloat(valueStrInMemory);
-    let newValueNum;
+    //let newValueNum;
+    let result;
     if (operatorInMemory === 'addition') {
-        newValueNum = valueNumInMemory + currentValueNum;
+        result = valueNumInMemory + currentValueNum;
     }
     else if (operatorInMemory === 'subtraction') {
-        newValueNum = valueNumInMemory - currentValueNum;
+        result = valueNumInMemory - currentValueNum;
     }
     else if (operatorInMemory === 'multiplication') {
-        newValueNum = valueNumInMemory * currentValueNum;
+        result = valueNumInMemory * currentValueNum;
     }
     else if (operatorInMemory === 'division') {
-        newValueNum = valueNumInMemory / currentValueNum;
+        result = valueNumInMemory / currentValueNum;
     }
-    console.log(newValueNum);
-    return newValueNum.toString();
+    //console.log(newValueNum);
+    return result.toString();
 };
 
 const handleOperatorClick = (operation) => {
@@ -93,9 +99,12 @@ const handleOperatorClick = (operation) => {
         return;
     }
     valueStrInMemory = getResultofOperationAsStr();
-    operatorInMemory = operation;
-    //setStrAsValue('0');
     setStrAsValue(valueStrInMemory);
+    console.log(valueStrInMemory);
+    operatorInMemory = operation;
+    console.log(operatorInMemory);
+    //setStrAsValue('0');
+
 };
 
 
