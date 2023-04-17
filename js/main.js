@@ -1,153 +1,135 @@
-const valueElement = document.getElementById("value");
+const monitor = document.getElementsByClassName("result-value")[0];
+const clearAllBtn = document.getElementsByClassName("clear")[0];
+const number = document.getElementsByClassName("numbers");
+const operator = document.getElementsByClassName("operator-btn");
+const equal = document.getElementsByClassName("equal")[0];
 
-const acButton = document.getElementById("clear");
 
-const addButton = document.getElementById("addition");
-const subButton = document.getElementById("subtraction");
-const mulButton = document.getElementById("multiplication");
-const divButton = document.getElementById("division");
-const equalButton = document.getElementById("equal");
 
-const decimalButton = document.getElementById("decimal");
+let firstValue = "";
+let secondValue = "";
+let operatorValue = "";
+let resultValue = "";
+let isClearmonitor = false;
+let isClearAll = false;
 
-const number0 = document.getElementById("number_0");
-const number1 = document.getElementById("number_1");
-const number2 = document.getElementById("number_2");
-const number3 = document.getElementById("number_3");
-const number4 = document.getElementById("number_4");
-const number5 = document.getElementById("number_5");
-const number6 = document.getElementById("number_6");
-const number7 = document.getElementById("number_7");
-const number8 = document.getElementById("number_8");
-const number9 = document.getElementById("number_9");
-
-const numberArray = [number0, number1, number2, number3, number4, number5, number6, number7, number8, number9];
-
-//variables
-let valueStrInMemory = null;
-let operatorInMemory = null;
-let result = null;
-isDisplayClear = false;
-
-//functions
-const getValueAsStr = () => valueElement.textContent.split(',').join('');
-
-const getValueAsNum = () => {
-    return parseFloat(getValueAsStr());
+const clearAll = () => {
+    firstValue = "";
+    secondValue = "";
+    operatorValue = "";
+    resultValue = "";
+    monitor.textContent = "0";
+    isClearmonitor = false;
+    isClearAll = false;
 };
 
-const setStrAsValue = (valueStr) => {
-    if (valueStr[valueStr.length - 1] === '.') {
-        valueElement.textContent += '.';
-        return;
-    }
+clearAllBtn.addEventListener("click", clearAll);
 
-    const [wholeNumStr, decimalNumStr] = valueStr.split('.');
-    //console.log(wholeNumStr, decimalNumStr);
+Array.from(number).forEach(numberButton => {
+    numberButton.addEventListener("click", (e) => {
+        const value = e.target.textContent;
+        let currentmonitorText = monitor.textContent;
 
-    if (decimalNumStr) {
-        valueElement.textContent = parseFloat(wholeNumStr).toLocaleString() + '.' + decimalNumStr;
-    }
-    else {
-        valueElement.textContent = parseFloat(wholeNumStr).toLocaleString();
-    }
-}
-
-const handleNumberClick = (numStr) => {
-    //console.log(numStr);
-    const currentValueStr = getValueAsStr();
-    if (currentValueStr === "0") {
-        setStrAsValue(numStr);
-    }
-    else {
-        if (result) {
-            valueElement.textContent = "0".join('');
-            setStrAsValue(currentValueStr + numStr);
+        if (isClearAll) {
+            clearAll();
+            currentmonitorText = "0";
         }
-        setStrAsValue(currentValueStr + numStr);
-    }
-};
 
-const getResultofOperationAsStr = () => {
-    const currentValueNum = getValueAsNum();
-    const valueNumInMemory = parseFloat(valueStrInMemory);
-    //let newValueNum;
-    let result;
-    if (operatorInMemory === 'addition') {
-        result = valueNumInMemory + currentValueNum;
-    }
-    else if (operatorInMemory === 'subtraction') {
-        result = valueNumInMemory - currentValueNum;
-    }
-    else if (operatorInMemory === 'multiplication') {
-        result = valueNumInMemory * currentValueNum;
-    }
-    else if (operatorInMemory === 'division') {
-        result = valueNumInMemory / currentValueNum;
-    }
-    //console.log(newValueNum);
-    return result.toString();
-};
+        if (isClearmonitor) {
+            currentmonitorText = "0";
+            isClearmonitor = false;
+        }
 
-const handleOperatorClick = (operation) => {
-    const currentValueStr = getValueAsStr();
+        if (currentmonitorText === "0") {
+            if (value === "0") {
+                return;
+            }
 
-    if (!valueStrInMemory) {
-        valueStrInMemory = currentValueStr;
-        operatorInMemory = operation;
-        setStrAsValue('0');
-        return;
-    }
-    valueStrInMemory = getResultofOperationAsStr();
-    setStrAsValue(valueStrInMemory);
-    console.log(valueStrInMemory);
-    operatorInMemory = operation;
-    console.log(operatorInMemory);
-    //setStrAsValue('0');
+            if (value === ".") {
+                monitor.textContent = "0.";
+                return;
+            }
 
-};
+            if (value !== "0") {
+                monitor.textContent = value;
+                return;
+            }
+        }
 
+        if (currentmonitorText.includes(".") && value === ".") {
+            return;
+        }
 
-//Add event listener to functions
-acButton.addEventListener('click', () => {
-    setStrAsValue('0');
-    valueStrInMemory = null;
-    operatorInMemory = null;
-});
-
-//Add event listener to operator
-addButton.addEventListener('click', () => {
-    handleOperatorClick('addition');
-});
-subButton.addEventListener('click', () => {
-    handleOperatorClick('subtraction');
-});
-mulButton.addEventListener('click', () => {
-    handleOperatorClick('multiplication');
-});
-divButton.addEventListener('click', () => {
-    handleOperatorClick('division');
-});
-equalButton.addEventListener('click', () => {
-    if (valueStrInMemory) {
-        setStrAsValue(getResultofOperationAsStr());
-        valueStrInMemory = null;
-        operatorInMemory = null;
-    }
-});
-
-
-//Add event listener to numbers & decimal
-for (let i = 0; i < numberArray.length; i++) {
-    const numberElement = numberArray[i];
-    numberElement.addEventListener('click', () => {
-        handleNumberClick(i.toString());
+        monitor.textContent += value;
     });
-}
+});
 
-decimalButton.addEventListener('click', () => {
-    const currentValueStr = getValueAsStr();
-    if (!currentValueStr.includes('.')) {
-        setStrAsValue(currentValueStr + '.');
+Array.from(operator).forEach(operatorButton => {
+    operatorButton.addEventListener("click", (e) => {
+        const value = monitor.textContent;
+        //operatorValue = e.target.textContent;
+
+        if (resultValue) {
+            firstValue = resultValue;
+            secondValue = "0";
+            resultValue = "";
+            isClearAll = false;
+        }
+
+        else if (firstValue === "") {
+            firstValue = parseFloat(value);
+        }
+
+        else {
+            firstValue = calculate(firstValue, parseFloat(value), operatorValue);
+            monitor.textContent = firstValue;
+        }
+
+        operatorValue = e.target.textContent;
+        console.log(operatorValue);
+        isClearmonitor = true;
+    });
+});
+
+equal.addEventListener("click", (e) => {
+
+    if (firstValue) {
+        secondValue = parseFloat(monitor.textContent);
+
+        if (operatorValue === "") {
+            secondValue = firstValue;
+        }
+
+        resultValue = calculate(firstValue, secondValue, operatorValue);
     }
-})
+
+    else {
+        resultValue = firstValue;
+    }
+
+    monitor.textContent = resultValue;
+    isClearAll = true;
+});
+
+const calculate = (firstNumber, secondNumber, operator) => {
+    let result = null;
+
+    if (operator === "+") {
+        result = firstNumber + secondNumber;
+    }
+
+    if (operator === "-") {
+        result = firstNumber - secondNumber;
+    }
+
+    if (operator === "*") {
+        result = firstNumber * secondNumber;
+    }
+
+    if (operator === "/") {
+        result = firstNumber / secondNumber;
+    }
+
+    console.log(firstNumber, operator, secondNumber, result);
+    return result;
+};
